@@ -65,6 +65,7 @@ def run():
         info(f"Found {len(races)} options")
         for r in races:
             send_text(f"Race : {r.date} {r.time} at {r.location}")
+    send_text(f"Race : This is a test")
 
 
 if __name__ == "__main__":
