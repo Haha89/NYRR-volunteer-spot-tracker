@@ -35,7 +35,7 @@ def extract_races(offset=0):
     content = requests.get(get_url(offset=offset)).content
     raw = Result(**json.loads(content))
     possibilities = []
-    races = BeautifulSoup(raw.html, "html.parser").find_all("section", {"class": "role_listing"})
+    races = BeautifulSoup(raw.html).find_all("section", {"class": "role_listing"})
     for r in races:
         if r.find("div", {"class": "tag tag--no"}) and r.find("div", {"class": "tag tag--no"}).text == ' 9+1 ':
             continue  # Does not count for 9 + 1
