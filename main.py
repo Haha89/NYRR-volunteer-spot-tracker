@@ -34,8 +34,11 @@ def extract_info(element, key):
 def extract_races(offset=0):
     content = requests.get(get_url(offset=offset)).content
     raw = Result(**json.loads(content))
+    print(raw)
     possibilities = []
-    for r in BeautifulSoup(raw.html).find_all("section", {"class": "role_listing"}):
+    races = BeautifulSoup(raw.html).find_all("section", {"class": "role_listing"})
+    print(f"Found {len(races)} races")
+    for r in races:
         if r.find("div", {"class": "tag tag--no"}) and r.find("div", {"class": "tag tag--no"}).text == ' 9+1 ':
             continue  # Does not count for 9 + 1
         if r.find("div", {"class": "medical_icon"}):
