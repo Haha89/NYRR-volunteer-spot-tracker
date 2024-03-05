@@ -1,0 +1,28 @@
+name: run main.py
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'  # Every 10 minutes
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: checkout repo content
+        uses: actions/checkout@v2
+
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: install python packages
+        run: |
+          pip install -r requirements.txt
+
+      - name: execute py script
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_HASH: ${{ secrets.TELEGRAM_HASH }}
+        run: python main.py
