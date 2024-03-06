@@ -33,7 +33,13 @@ def extract_info(element, key):
 
 def extract_races(offset=0):
     content = requests.get(get_url(offset=offset)).content
-    raw = Result(**json.loads(content))
+    try:
+        raw = json.loads(content)
+    except json.decoder.JSONDecodeError:
+        warning("Failed to get content")
+        raw = {"lastPage": True, "html": ""}
+        
+    raw = Result(**raw)
     possibilities = []
     races = BeautifulSoup(raw.html).find_all("section", {"class": "role_listing"})
     for r in races:
