@@ -23,6 +23,7 @@ class Race:
 
 
 def get_url(offset=0, total_item_loaded=8):
+    info(f"Fetching races with offset {offset}")
     return f"https://www.nyrr.org/api/feature/volunteer/FilterVolunteerOpportunities?available_only=true&" \
            f"itemId=3EB6F0CC-0D76-4BAF-A894-E2AB244CEB44&limit={total_item_loaded}&offset={offset}&totalItemLoaded={total_item_loaded}"
 
