@@ -29,12 +29,14 @@ def extract_info(element, key):
     return element.find("div", {"class": f"role_listing__{key}"}).text
 
 
-def extract_races(offset=0) -> (bool, List[Race], int):
+def extract_races(offset=0, retry=True) -> (bool, List[Race], int):
     content = requests.get(get_url(offset=offset)).content
     try:
         raw = json.loads(content)
     except json.decoder.JSONDecodeError:
         print(f"Failed to convert content: {content}")
+        if retry:
+            return extract_races(offset, False)
         raw = {"lastPage": True, "html": ""}
 
     raw = Result(**raw)
