@@ -1,12 +1,9 @@
 import json
-from logging import basicConfig, info, warning
 from os import environ
 from typing import List
 
 import requests
 from bs4 import BeautifulSoup
-
-basicConfig(format='%(asctime)s: %(message)s')
 
 
 class Result:
@@ -23,7 +20,7 @@ class Race:
 
 
 def get_url(offset=0, total_item_loaded=8):
-    info(f"Fetching races with offset {offset}")
+    print(f"Fetching races with offset {offset}")
     return f"https://www.nyrr.org/api/feature/volunteer/FilterVolunteerOpportunities?available_only=true&" \
            f"itemId=3EB6F0CC-0D76-4BAF-A894-E2AB244CEB44&limit={total_item_loaded}&offset={offset}&totalItemLoaded={total_item_loaded}"
 
@@ -37,7 +34,7 @@ def extract_races(offset=0) -> (bool, List[Race], int):
     try:
         raw = json.loads(content)
     except json.decoder.JSONDecodeError:
-        warning(f"Failed to convert content: {content}")
+        print(f"Failed to convert content: {content}")
         raw = {"lastPage": True, "html": ""}
 
     raw = Result(**raw)
@@ -55,14 +52,14 @@ def extract_races(offset=0) -> (bool, List[Race], int):
 
 def send_text(bot_message):
     if not environ.get("TELEGRAM_TOKEN") or not environ.get("TELEGRAM_HASH"):
-        info("Telegram not setup")
+        print("Telegram not setup")
 
     return requests.get(f'https://api.telegram.org/bot{environ.get("TELEGRAM_TOKEN")}/sendMessage?chat_id='
                         f'{environ.get("TELEGRAM_HASH")}&parse_mode=Markdown&text={bot_message}')
 
 
 def run():
-    warning("Bot starting")
+    print("Bot starting")
     last_page, races, offset = False, [], 0
     while not last_page:
         last_page, items, nb_races = extract_races(offset)
